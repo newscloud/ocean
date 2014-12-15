@@ -530,3 +530,7 @@ Stack trace:
 	`status` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB CHARSET=utf8.
 2014/12/15 12:34:59 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ocean.do_migration' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `do_migration`.
+2014/12/15 13:59:42 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1025 Error on rename of './ocean/do_image' to './ocean/#sql2-48d3-c7' (errno: 152). The SQL statement executed was: ALTER TABLE `do_image` DROP FOREIGN KEY `fk_droplet_user`.
+2014/12/15 14:44:28 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1025 Error on rename of './ocean/do_image' to './ocean/#sql2-48d3-106' (errno: 152). The SQL statement executed was: ALTER TABLE `do_image` DROP FOREIGN KEY `fk_droplet_user`.
+2014/12/15 14:46:39 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ocean.do_migration' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `do_migration`.
+2014/12/15 14:56:59 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1025 Error on rename of './ocean/do_image' to './ocean/#sql2-48d3-146' (errno: 152). The SQL statement executed was: ALTER TABLE `do_image` DROP FOREIGN KEY `fk_droplet_user`.

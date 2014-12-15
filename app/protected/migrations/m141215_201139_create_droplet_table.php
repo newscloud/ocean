@@ -17,6 +17,7 @@ class m141215_201139_create_droplet_table extends CDbMigration
  	  $this->before();
   $this->createTable($this->tableName, array(
              'id' => 'pk',
+             'user_id'  => 'integer default 0',
              'droplet_id' => 'integer default 0',
              'name' => 'string NOT NULL',
              'memory' =>  'integer default 0',
@@ -27,13 +28,13 @@ class m141215_201139_create_droplet_table extends CDbMigration
              'created_at' => 'DATETIME NOT NULL DEFAULT 0',
              'modified_at' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
                ), $this->MySqlOptions);
-//               $this->addForeignKey('fk_account_user', $this->tableName, 'user_id', $this->tablePrefix.'users', 'id', 'CASCADE', 'CASCADE');
+               $this->addForeignKey('fk_droplet_user', $this->tableName, 'user_id', $this->tablePrefix.'users', 'id', 'CASCADE', 'CASCADE');
  	}
 
  	public function safeDown()
  	{
  	  	$this->before();
-// 	  	$this->dropForeignKey('fk_account_user', $this->tableName);
+ 	  	$this->dropForeignKey('fk_droplet_user', $this->tableName);
  	    $this->dropTable($this->tableName);
  	}
 }

@@ -40,8 +40,8 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/main.js');
 			'class' => 'bootstrap.widgets.TbMenu',
 			'htmlOptions'=>array('class'=>'pull-left'),
 			'items' => array(
-				array('label'=>'Droplets', 'url'=>array('/droplet/index'), ),
-				array('label'=>'Images', 'url'=>array('/image/compose'), ),
+				array('label'=>'Droplets', 'url'=>array('/droplet/admin'), ),
+				array('label'=>'Images', 'url'=>array('/image/admin'), ),
 			)
   	  ) : array() ),
 
@@ -59,7 +59,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/main.js');
           array('label'=>'Hi '.getFirstName(), 'visible'=>!Yii::app()->user->isGuest),
 array('url'=>Yii::app()->getModule('user')->loginUrl, 'label'=>Yii::app()->getModule('user')->t("Login"), 'visible'=>Yii::app()->user->isGuest),
 array('url'=>Yii::app()->getModule('user')->registrationUrl, 'label'=>Yii::app()->getModule('user')->t("Sign up"), 'visible'=>Yii::app()->user->isGuest),
-array('url'=>array('/usersetting/update'), 'label'=>'Your settings', 'visible'=>!Yii::app()->user->isGuest),
+//array('url'=>array('/usersetting/update'), 'label'=>'Your settings', 'visible'=>!Yii::app()->user->isGuest),
 array('url'=>Yii::app()->getModule('user')->logoutUrl, 'label'=>'Sign out', 'visible'=>!Yii::app()->user->isGuest),			
 
 				)),

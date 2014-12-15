@@ -1,11 +1,11 @@
 <?php
 $this->breadcrumbs=array(
-	'Droplets'=>array('index'),
+	'Images'=>array('index'),
 	'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'Sync Droplets','url'=>array('sync')),
+	array('label'=>'Sync Images','url'=>array('sync')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -14,7 +14,7 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('droplet-grid', {
+	$.fn.yiiGridView.update('image-grid', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -22,27 +22,18 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Droplets</h1>
-
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
+<h1>Manage Images</h1>
 
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
-	'id'=>'droplet-grid',
+	'id'=>'image-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'droplet_id',
+		'image_id',
 		'name',
-		'memory',
-		'vcpus',
-		'disk',
+		'distribution',
+		'region',
 		/*
-		'status',
-		'active',
 		'created_at',
 		'modified_at',
 		*/

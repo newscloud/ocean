@@ -18,9 +18,38 @@ class Ocean extends CComponent
   
   public function getDroplets() {
     // return the action api
-    $action  = $this->digitalOcean->image();
-
+    $action  = $this->digitalOcean->droplet();
     // return a collection of Action entity
     $actions = $action->getAll();    
+    return $actions;
   }
+
+  public function getImages() {
+    // return the action api
+    $action  = $this->digitalOcean->image();
+    // return a collection of Action entity
+    $actions = $action->getAll();    
+    return $actions;
+  }
+  
+  public function getRegions() {
+    // return the region api
+    $region = $this->digitalOcean->region();
+
+    // return a collection of Region entity
+    $regions = $region->getAll();    
+    pp ($regions);
+  }
+    
+  public function newDroplets($name,$region,$size,$image_id,$begin,$count) {
+    // return the action api
+    $droplet  = $this->digitalOcean->droplet();
+    for ($i = 1; $i <= $count; $i++) {
+      $created = $droplet->create($name.'_'.$begin, $region, $size, $image_id);
+      $begin+=1;
+      break;
+    }
+    pp ($created);
+  }
+
 }

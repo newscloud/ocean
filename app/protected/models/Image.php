@@ -1,17 +1,16 @@
 <?php
 
 /**
- * This is the model class for table "{{droplet}}".
+ * This is the model class for table "{{image}}".
  *
- * The followings are the available columns in table '{{droplet}}':
+ * The followings are the available columns in table '{{image}}':
  * @property integer $id
  * @property integer $user_id
- * @property integer $droplet_id
+ * @property integer $image_id
  * @property string $name
- * @property integer $memory
- * @property integer $vcpus
- * @property integer $disk
- * @property string $status
+ * @property string $distribution
+ * @property string $slug
+ * @property integer $public
  * @property integer $active
  * @property string $created_at
  * @property string $modified_at
@@ -19,12 +18,12 @@
  * The followings are the available model relations:
  * @property Users $user
  */
-class Droplet extends CActiveRecord
+class Image extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Droplet the static model class
+	 * @return Image the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -36,7 +35,7 @@ class Droplet extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{droplet}}';
+		return '{{image}}';
 	}
 
 	/**
@@ -47,13 +46,13 @@ class Droplet extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, status, modified_at', 'required'),
-			array('user_id, droplet_id, memory, vcpus, disk, active', 'numerical', 'integerOnly'=>true),
-			array('name, status', 'length', 'max'=>255),
+			array('name, distribution', 'required'),
+			array('user_id, image_id, public, active', 'numerical', 'integerOnly'=>true),
+			array('name, distribution, slug', 'length', 'max'=>255),
 			array('created_at', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, user_id, droplet_id, name, memory, vcpus, disk, status, active, created_at, modified_at', 'safe', 'on'=>'search'),
+			array('id, user_id, image_id, name, distribution, slug, public, active, created_at, modified_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,12 +76,11 @@ class Droplet extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'user_id' => 'User',
-			'droplet_id' => 'Droplet',
+			'image_id' => 'Image',
 			'name' => 'Name',
-			'memory' => 'Memory',
-			'vcpus' => 'Vcpus',
-			'disk' => 'Disk',
-			'status' => 'Status',
+			'distribution' => 'Distribution',
+			'slug' => 'Slug',
+			'public' => 'Public',
 			'active' => 'Active',
 			'created_at' => 'Created At',
 			'modified_at' => 'Modified At',
@@ -102,12 +100,11 @@ class Droplet extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('droplet_id',$this->droplet_id);
+		$criteria->compare('image_id',$this->image_id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('memory',$this->memory);
-		$criteria->compare('vcpus',$this->vcpus);
-		$criteria->compare('disk',$this->disk);
-		$criteria->compare('status',$this->status,true);
+		$criteria->compare('distribution',$this->distribution,true);
+		$criteria->compare('slug',$this->slug,true);
+		$criteria->compare('public',$this->public);
 		$criteria->compare('active',$this->active);
 		$criteria->compare('created_at',$this->created_at,true);
 		$criteria->compare('modified_at',$this->modified_at,true);
@@ -119,30 +116,50 @@ class Droplet extends CActiveRecord
 	
 	public function sync() {
     $ocean = new Ocean();
-    $droplets = $ocean->getDroplets();
-    // pp ($droplets);
-    foreach ($droplets as $d) {
-      $droplet_id = $this->add($d);
-      echo $droplet_id;lb();
+    $images = $ocean->getImages();
+    foreach ($images as $i) {
+      $image_id = $this->add($i);
+      //$image_id = $i->id;
+      if ($image_id!==false) {
+        echo $image_id;lb();
+        pp($i);        
+      }
     }	      
   }
 
-  public function add($droplet) {
-     $d = Droplet::model()->findByAttributes(array('droplet_id'=>$droplet->id));
-    if (empty($d)) {
-      $d = new Droplet;
+  public function add($image) {
+     $i = Image::model()->findByAttributes(array('image_id'=>$image->id));
+    if (empty($i)) {
+      $i = new Image;
+      $i->created_at =new CDbExpression('NOW()');          
     }
-    $d->user_id = Yii::app()->user->id;
-      $d->droplet_id = $droplet->id;
-      $d->name = $droplet->name;
-      $d->vcpus = $droplet->vcpus;
-      $d->memory = $droplet->memory;
-      $d->disk = $droplet->disk;
-      $d->status = $droplet->status;
-      $d->active =1;
-     $d->created_at = $d->created_at;
-     $d->modified_at =new CDbExpression('NOW()');          
-     $d->save();
-    return $d->id;
+    $i->user_id = Yii::app()->user->id; 	  
+      $i->image_id = $image->id;
+      $i->name = $image->name;
+      $i->distribution = $image->distribution;
+      $i->slug = $image->slug;
+      $i->minDiskSize = $image->minDiskSize;
+      $i->region = $image->regions[0];
+      if (isset($image->public) and $image->public ==1) {
+        $i->public = 1;
+        return false; // no need to save public images right now
+      } else 
+        $i->public =0;
+      $i->active =1;
+      $i->modified_at =new CDbExpression('NOW()');          
+     $i->save();
+   return $i->id;
+   }
+  
+   public function new_droplet($image_id) {
+     $ocean = new Ocean();
+     $droplet = $ocean->getImages();
+     foreach ($images as $i) {
+       $image_id = $this->add($i);
+       if ($image_id!==false) {
+         echo $image_id;lb();
+         pp($i);        
+       }
+     }	      
    }
 }

@@ -99,10 +99,12 @@ $options = array(
             ),
 		'user'=>array(
 			// enable cookie-based authentication
+      'class' => 'WebUser',
 			'allowAutoLogin'=>true,
+			'loginUrl'=>'/user/login',
 			'autoRenewCookie' => true,
       'authTimeout' => 31557600,
-		),
+		),		
     'bootstrap' => array(
 	    'class' => 'ext.bootstrap.components.Bootstrap',
 	    'responsiveCss' => true,
@@ -137,12 +139,6 @@ $options = array(
 			'charset' => 'utf8',
 			'tablePrefix'=>$config['mysql_tbl_prefix'],
 		),
-		/* */
-		'user'=>array(
-            // enable cookie-based authentication
-            'class' => 'WebUser',
-            'class' => 'auth.components.AuthWebUser',
-        ),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',

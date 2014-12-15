@@ -28,13 +28,7 @@ class SiteController extends Controller
 	public function actionIndex()
 	{
 	  if(!Yii::app()->user->isGuest) {
-//  	  if (UserSetting::model()->count()==0 or !UserSetting::model()->checkConfiguration(Yii::app()->user->id))
-//        $this->redirect(array('/usersetting/update'));
-  	  //else 
-  	  if (Account::model()->count()==0)
-        $this->redirect(array('/account/create'));
-      else
-        $this->redirect(array('/tweet/index'));	    
+        $this->redirect(array('/droplet'));
 	  }
 	  	  
 		// renders the view file 'protected/views/site/index.php'

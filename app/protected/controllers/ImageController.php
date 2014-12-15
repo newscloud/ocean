@@ -1,6 +1,6 @@
 <?php
 
-class DropletController extends Controller
+class ImageController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -35,7 +35,7 @@ class DropletController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('index','view','create','update','sync','admin','delete','test'),
+				'actions'=>array('index','view','create','update','admin','delete','sync','new'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -55,20 +55,25 @@ class DropletController extends Controller
 		));
 	}
 
+  public function actionNew($id) {
+    // create a droplet from image id
+    
+  }
+  
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
 	{
-		$model=new Droplet;
+		$model=new Image;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Droplet']))
+		if(isset($_POST['Image']))
 		{
-			$model->attributes=$_POST['Droplet'];
+			$model->attributes=$_POST['Image'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -90,9 +95,9 @@ class DropletController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Droplet']))
+		if(isset($_POST['Image']))
 		{
-			$model->attributes=$_POST['Droplet'];
+			$model->attributes=$_POST['Image'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -127,12 +132,15 @@ class DropletController extends Controller
 	 */
 	public function actionIndex()
 	{
-	  $this->redirect('/droplet/admin');
+		$dataProvider=new CActiveDataProvider('Image');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
 	}
 
   public function actionSync() {
-    $droplet = new Droplet();
-    $droplet->sync();
+    $image = new Image();
+    $image->sync();
   }
   
 	/**
@@ -140,10 +148,10 @@ class DropletController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Droplet('search');
+		$model=new Image('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Droplet']))
-			$model->attributes=$_GET['Droplet'];
+		if(isset($_GET['Image']))
+			$model->attributes=$_GET['Image'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -157,7 +165,7 @@ class DropletController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Droplet::model()->findByPk($id);
+		$model=Image::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -169,16 +177,10 @@ class DropletController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='droplet-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='image-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-	}
-	
-	public function actionTest() {
-	  $ocean = new Ocean();
-    $regions = $ocean->getRegions();
-    
 	}
 }
