@@ -1,0 +1,8 @@
+{
+    "require": {
+        "willdurand/geocoder": "*",
+        "toin0u/digitalocean-v2": "0.3.*@dev",
+        "kriswallsmith/buzz": "~0.10",
+        "guzzle/guzzle": "~3.7"
+    }
+}
