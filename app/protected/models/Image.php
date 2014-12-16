@@ -10,6 +10,8 @@
  * @property string $name
  * @property string $distribution
  * @property string $slug
+ * @property string $region
+ * @property integer $minDiskSize
  * @property integer $public
  * @property integer $active
  * @property string $created_at
@@ -46,13 +48,13 @@ class Image extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, distribution', 'required'),
-			array('user_id, image_id, public, active', 'numerical', 'integerOnly'=>true),
-			array('name, distribution, slug', 'length', 'max'=>255),
+			array('name, distribution, region', 'required'),
+			array('user_id, image_id, minDiskSize, public, active', 'numerical', 'integerOnly'=>true),
+			array('name, distribution, slug, region', 'length', 'max'=>255),
 			array('created_at', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, user_id, image_id, name, distribution, slug, public, active, created_at, modified_at', 'safe', 'on'=>'search'),
+			array('id, user_id, image_id, name, distribution, slug, region, minDiskSize, public, active, created_at, modified_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +66,7 @@ class Image extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+//			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 		);
 	}
 
@@ -80,6 +82,8 @@ class Image extends CActiveRecord
 			'name' => 'Name',
 			'distribution' => 'Distribution',
 			'slug' => 'Slug',
+			'region' => 'Region',
+			'minDiskSize' => 'Min Disk Size',
 			'public' => 'Public',
 			'active' => 'Active',
 			'created_at' => 'Created At',
@@ -104,6 +108,8 @@ class Image extends CActiveRecord
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('distribution',$this->distribution,true);
 		$criteria->compare('slug',$this->slug,true);
+		$criteria->compare('region',$this->region,true);
+		$criteria->compare('minDiskSize',$this->minDiskSize);
 		$criteria->compare('public',$this->public);
 		$criteria->compare('active',$this->active);
 		$criteria->compare('created_at',$this->created_at,true);
@@ -114,7 +120,8 @@ class Image extends CActiveRecord
 		));
 	}
 	
-	public function sync() {
+	
+  public function sync() {
     $ocean = new Ocean();
     $images = $ocean->getImages();
     foreach ($images as $i) {
@@ -124,6 +131,7 @@ class Image extends CActiveRecord
         echo $image_id;lb();
         pp($i);        
       }
+      break;
     }	      
   }
 
@@ -133,33 +141,36 @@ class Image extends CActiveRecord
       $i = new Image;
       $i->created_at =new CDbExpression('NOW()');          
     }
-    $i->user_id = Yii::app()->user->id; 	  
+    if (isset($image->public) and $image->public ==1) {
+      $i->public = 1;
+      return false; // no need to save public images right now
+    } else 
+      $i->public =0;
+      $i->user_id = Yii::app()->user->id; 	  
       $i->image_id = $image->id;
       $i->name = $image->name;
       $i->distribution = $image->distribution;
-      $i->slug = $image->slug;
+      if (isset($image->slug))
+        $i->slug = $image->slug;
+      else
+        $i->slug ='';
       $i->minDiskSize = $image->minDiskSize;
       $i->region = $image->regions[0];
-      if (isset($image->public) and $image->public ==1) {
-        $i->public = 1;
-        return false; // no need to save public images right now
-      } else 
-        $i->public =0;
       $i->active =1;
       $i->modified_at =new CDbExpression('NOW()');          
      $i->save();
    return $i->id;
    }
-  
-   public function new_droplet($image_id) {
+
+   public function instantiate($id) {
+     $image = Image::model()->findByAttributes(array('id'=>$id));
      $ocean = new Ocean();
-     $droplet = $ocean->getImages();
-     foreach ($images as $i) {
-       $image_id = $this->add($i);
-       if ($image_id!==false) {
-         echo $image_id;lb();
-         pp($i);        
-       }
-     }	      
+     $created = $ocean->instantiate($image->name,$image->region,$image->image_id);
+   }
+
+   public function duplicate($id) {
+     $image = Image::model()->findByAttributes(array('id'=>$id));
+     $ocean = new Ocean();
+     $created = $ocean->duplicate($image->name,$image->region,$image->image_id);
    }
 }

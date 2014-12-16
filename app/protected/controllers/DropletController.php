@@ -35,7 +35,7 @@ class DropletController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('index','view','create','update','sync','admin','delete','test'),
+				'actions'=>array('index','view','create','update','sync','admin','delete'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -133,6 +133,12 @@ class DropletController extends Controller
   public function actionSync() {
     $droplet = new Droplet();
     $droplet->sync();
+    $this->redirect('/droplet/admin');
+  }
+  
+  public function actionSnapshots() {
+    $droplet = new Droplet();
+    $droplet->snapshots();
   }
   
 	/**
@@ -176,9 +182,4 @@ class DropletController extends Controller
 		}
 	}
 	
-	public function actionTest() {
-	  $ocean = new Ocean();
-    $regions = $ocean->getRegions();
-    
-	}
 }

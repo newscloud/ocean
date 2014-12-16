@@ -40,16 +40,29 @@ class Ocean extends CComponent
     $regions = $region->getAll();    
     pp ($regions);
   }
-    
-  public function newDroplets($name,$region,$size,$image_id,$begin,$count) {
+
+  public function instantiate($name,$region,$image_id,$size='512mb') {
     // return the action api
+     $name = str_replace("_","-",$name);
     $droplet  = $this->digitalOcean->droplet();
-    for ($i = 1; $i <= $count; $i++) {
-      $created = $droplet->create($name.'_'.$begin, $region, $size, $image_id);
-      $begin+=1;
+    $created = $droplet->create($name.'-src', $region, $size, $image_id);
+    $droplet_id = $created->id;
+  }
+    
+  public function duplicate($name,$region,$image_id,$begin=0,$count=5,$size='512mb') {
+    // return the action api
+     $name = str_replace("_","-",$name);
+    echo $name;
+    $droplet  = $this->digitalOcean->droplet();
+    $created = $droplet->create($name.'-src', $region, $size, $image_id);
+    $droplet_id = $created->id;
+    pp ($created);
+    yexit();
+    for ($i = 0; $i < $count; $i++) {
+      $shutdown = $droplet->shutdown($droplet_id);
+      $snapshot = $droplet->snapshot($droplet_id, $name.'-copy-'.$i); 
       break;
     }
-    pp ($created);
   }
 
 }

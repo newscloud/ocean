@@ -41,7 +41,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/main.js');
 			'htmlOptions'=>array('class'=>'pull-left'),
 			'items' => array(
 				array('label'=>'Droplets', 'url'=>array('/droplet/admin'), ),
-				array('label'=>'Images', 'url'=>array('/image/admin'), ),
+				array('label'=>'Images', 'url'=>array('/snapshot/admin'), ),
 			)
   	  ) : array() ),
 

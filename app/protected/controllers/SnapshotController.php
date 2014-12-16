@@ -1,6 +1,6 @@
 <?php
 
-class ImageController extends Controller
+class SnapshotController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,17 +27,17 @@ class ImageController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array(''),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array(''),
+				'actions'=>array('create','update'),
 				'users'=>array('@'),
 			),
-      array('allow', // allow admin user to perform 'admin' and 'delete' actions
-      	'actions'=>array('index','view','create','update','admin','delete','sync','instantiate'),
-      	'users'=>array('admin'),
-      ),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin','delete'),
+				'users'=>array('admin'),
+			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -61,14 +61,14 @@ class ImageController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Image;
+		$model=new Snapshot;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Image']))
+		if(isset($_POST['Snapshot']))
 		{
-			$model->attributes=$_POST['Image'];
+			$model->attributes=$_POST['Snapshot'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -90,9 +90,9 @@ class ImageController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Image']))
+		if(isset($_POST['Snapshot']))
 		{
-			$model->attributes=$_POST['Image'];
+			$model->attributes=$_POST['Snapshot'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -127,7 +127,7 @@ class ImageController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Image');
+		$dataProvider=new CActiveDataProvider('Snapshot');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -138,10 +138,10 @@ class ImageController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Image('search');
+		$model=new Snapshot('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Image']))
-			$model->attributes=$_GET['Image'];
+		if(isset($_GET['Snapshot']))
+			$model->attributes=$_GET['Snapshot'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -155,7 +155,7 @@ class ImageController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Image::model()->findByPk($id);
+		$model=Snapshot::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -167,17 +167,10 @@ class ImageController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='image-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='snapshot-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-	
-	public function actionSync() {
-    $image = new Image();
-    $image->sync();
-    //$this->redirect('/image/index');
-  }
-  
 }

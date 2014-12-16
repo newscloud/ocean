@@ -1,8 +1,7 @@
 <?php
   $config = parse_ini_file('/var/secure/ocean.ini', true);
-  if ($config['env']<>'live')  {
-    define('YII_DEBUG',true);
-}
+  if ($config['env']<>'live') 
+    defined('YII_DEBUG') or define('YII_DEBUG',true);
   require_once dirname(__FILE__) . '/../components/helpers.php'; 
   include dirname(__FILE__) . '/../../../vendor/autoload.php'; // composer autoload
 // This is the main Web application configuration. Any writable
@@ -159,7 +158,6 @@ $options = array(
 		'adminEmail'=>'admin@yourdomain.com',
 		'supportEmail'=>$config['support_email'],
 		'postsPerPage'=> $config['postsPerPage'],
-		'twitter_stream'=> $config['twitter_stream'],
     'mailgun'=> array(
       'api_key'=> $config['mailgun_api_key'],
         'api_url' => $config['mailgun_api_url']

@@ -14,6 +14,7 @@ class m141215_212528_create_image_table extends CDbMigration
 
    	public function safeUp()
    	{
+/*
    	  $this->before();
     $this->createTable($this->tableName, array(
                'id' => 'pk',
@@ -29,14 +30,16 @@ class m141215_212528_create_image_table extends CDbMigration
                'created_at' => 'DATETIME NOT NULL DEFAULT 0',
                'modified_at' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
                  ), $this->MySqlOptions);
-                 $this->addForeignKey('fk_image_user', $this->tableName, 'user_id', $this->tablePrefix.'users', 'id', 'CASCADE', 'CASCADE');
-                 
+//                 $this->addForeignKey('fk_image_user', $this->tableName, 'user_id', $this->tablePrefix.'users', 'id', 'CASCADE', 'CASCADE');
+*/                 
    	}
 
    	public function safeDown()
    	{
+/*
    	  	$this->before();
-   	  	$this->dropForeignKey('fk_image_user', $this->tableName);
+//   	  	$this->dropForeignKey('fk_image_user', $this->tableName);
    	    $this->dropTable($this->tableName);
+*/
    	}	
 }

@@ -16,31 +16,6 @@
 	<?php echo CHtml::encode($data->name); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('distribution')); ?>:</b>
-	<?php echo CHtml::encode($data->distribution); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('slug')); ?>:</b>
-	<?php echo CHtml::encode($data->slug); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('region')); ?>:</b>
-	<?php echo CHtml::encode($data->region); ?>
-	<br />
-
-	<?php /*
-	<b><?php echo CHtml::encode($data->getAttributeLabel('minDiskSize')); ?>:</b>
-	<?php echo CHtml::encode($data->minDiskSize); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('public')); ?>:</b>
-	<?php echo CHtml::encode($data->public); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('active')); ?>:</b>
-	<?php echo CHtml::encode($data->active); ?>
-	<br />
-
 	<b><?php echo CHtml::encode($data->getAttributeLabel('created_at')); ?>:</b>
 	<?php echo CHtml::encode($data->created_at); ?>
 	<br />
@@ -49,6 +24,5 @@
 	<?php echo CHtml::encode($data->modified_at); ?>
 	<br />
 
-	*/ ?>
 
 </div>

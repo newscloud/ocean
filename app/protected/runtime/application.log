@@ -534,3 +534,21 @@ Stack trace:
 2014/12/15 14:44:28 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1025 Error on rename of './ocean/do_image' to './ocean/#sql2-48d3-106' (errno: 152). The SQL statement executed was: ALTER TABLE `do_image` DROP FOREIGN KEY `fk_droplet_user`.
 2014/12/15 14:46:39 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ocean.do_migration' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `do_migration`.
 2014/12/15 14:56:59 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1025 Error on rename of './ocean/do_image' to './ocean/#sql2-48d3-146' (errno: 152). The SQL statement executed was: ALTER TABLE `do_image` DROP FOREIGN KEY `fk_droplet_user`.
+2014/12/15 16:18:55 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ocean.do_migration' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `do_migration`.
+2014/12/15 17:05:58 [error] [exception.CDbException] exception 'CDbException' with message 'CDbConnection failed to open the DB connection: SQLSTATE[HY000] [1049] Unknown database 'ocean'' in /Users/Jeff/Sites/ocean/framework/db/CDbConnection.php:381
+Stack trace:
+#0 /Users/Jeff/Sites/ocean/framework/db/CDbConnection.php(330): CDbConnection->open()
+#1 /Users/Jeff/Sites/ocean/framework/db/CDbConnection.php(308): CDbConnection->setActive(true)
+#2 /Users/Jeff/Sites/ocean/framework/base/CModule.php(387): CDbConnection->init()
+#3 /Users/Jeff/Sites/ocean/framework/base/CApplication.php(438): CModule->getComponent('db')
+#4 /Users/Jeff/Sites/ocean/framework/cli/commands/MigrateCommand.php(69): CApplication->getDb()
+#5 /Users/Jeff/Sites/ocean/framework/console/CConsoleCommand.php(170): MigrateCommand->beforeAction('create', Array)
+#6 /Users/Jeff/Sites/ocean/framework/console/CConsoleCommandRunner.php(67): CConsoleCommand->run(Array)
+#7 /Users/Jeff/Sites/ocean/framework/console/CConsoleApplication.php(91): CConsoleCommandRunner->run(Array)
+#8 /Users/Jeff/Sites/ocean/framework/base/CApplication.php(169): CConsoleApplication->processRequest()
+#9 /Users/Jeff/Sites/ocean/framework/yiic.php(33): CApplication->run()
+#10 /Users/Jeff/Sites/ocean/app/protected/yiic.php(7): require_once('/Users/Jeff/Sit...')
+#11 /Users/Jeff/Sites/ocean/app/protected/yiic(4): require_once('/Users/Jeff/Sit...')
+#12 {main}
+---
+2014/12/15 17:06:25 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ocean.do_migration' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `do_migration`.

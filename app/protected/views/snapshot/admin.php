@@ -1,11 +1,12 @@
 <?php
 $this->breadcrumbs=array(
-	'Images'=>array('index'),
+	'Snapshots'=>array('index'),
 	'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'Sync Images','url'=>array('sync')),
+	array('label'=>'List Snapshot','url'=>array('index')),
+	array('label'=>'Create Snapshot','url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -14,7 +15,7 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('image-grid', {
+	$.fn.yiiGridView.update('snapshot-grid', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -22,7 +23,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Images</h1>
+<h1>Manage Snapshots</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
@@ -37,7 +38,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 </div><!-- search-form -->
 
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
-	'id'=>'image-grid',
+	'id'=>'snapshot-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
@@ -45,16 +46,8 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'user_id',
 		'image_id',
 		'name',
-		'distribution',
-		'slug',
-		/*
-		'region',
-		'minDiskSize',
-		'public',
-		'active',
 		'created_at',
 		'modified_at',
-		*/
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 		),

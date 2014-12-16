@@ -65,7 +65,7 @@ class Droplet extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+//			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 		);
 	}
 
@@ -123,7 +123,7 @@ class Droplet extends CActiveRecord
     // pp ($droplets);
     foreach ($droplets as $d) {
       $droplet_id = $this->add($d);
-      echo $droplet_id;lb();
+      // echo $droplet_id;lb();
     }	      
   }
 
@@ -145,4 +145,5 @@ class Droplet extends CActiveRecord
      $d->save();
     return $d->id;
    }
+   
 }
