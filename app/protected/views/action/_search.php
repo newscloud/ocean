@@ -5,15 +5,19 @@
 
 	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'account_id',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'droplet_id',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'snapshot_id',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'action',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'last_tweet_id',array('class'=>'span5','maxlength'=>20)); ?>
+	<?php echo $form->textFieldRow($model,'status',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'stage',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'end_stage',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'last_checked',array('class'=>'span5')); ?>
-
-	<?php echo $form->textFieldRow($model,'status',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'created_at',array('class'=>'span5')); ?>
 

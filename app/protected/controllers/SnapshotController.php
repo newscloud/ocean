@@ -27,15 +27,15 @@ class SnapshotController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(''),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array(''),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete','create','update','sync','index','view','duplicate'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -147,6 +147,17 @@ class SnapshotController extends Controller
 			'model'=>$model,
 		));
 	}
+	
+	public function actionSync() {
+    $ss = new Snapshot();
+    $ss->sync();
+  }
+
+	public function actionDuplicate($id) {
+	  set_time_limit(0);
+    $ss = new Snapshot();
+    $ss->testing();
+  }	
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

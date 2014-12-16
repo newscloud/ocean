@@ -97,4 +97,64 @@ class Snapshot extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+   public function sync() {
+     $ocean = new Ocean();
+     $snapshots = $ocean->getSnapshots();
+     foreach ($snapshots as $i) {
+       $image_id = $this->add($i);
+       //$image_id = $i->id;
+       if ($image_id!==false) {
+         echo $image_id;lb();
+         pp($i);        
+       }
+     }	      
+   }
+
+   public function add($snapshot) {
+      $i = Snapshot::model()->findByAttributes(array('image_id'=>$snapshot->id));
+     if (empty($i)) {
+       $i = new Snapshot;
+       $i->created_at =new CDbExpression('NOW()');          
+     }
+     if (isset($snapshot->public) and $snapshot->public ==1) {
+       return false; // no need to save public images right now
+     } else 
+       $i->user_id = Yii::app()->user->id; 	  
+       $i->image_id = $snapshot->id;
+       $i->name = $snapshot->name;
+       $i->region = $snapshot->regions[0];
+       /*
+       $i->distribution = $snapshot->distribution;
+       if (isset($snapshot->slug))
+         $i->slug = $snapshot->slug;
+       else
+         $i->slug ='';
+       $i->minDiskSize = $snapshot->minDiskSize;
+       */
+       $i->active =1;
+       $i->modified_at =new CDbExpression('NOW()');          
+      $i->save();
+    return $i->id;
+    }	
+    
+    public function launch_droplet($id) {
+      $snapshot = Snapshot::model()->findByAttributes(array('id'=>$id));
+      $ocean = new Ocean();
+      $created = $ocean->launch_droplet($snapshot->name,$snapshot->region,$snapshot->image_id);
+    }
+
+    public function duplicate($id) {
+      $image = Snapshot::model()->findByAttributes(array('id'=>$id));
+      $ocean = new Ocean();
+      $created = $ocean->duplicate($image->name,$image->region,$image->image_id);
+    }
+    
+    public function testing($id=9) {
+      $droplet_id = 3487144;
+      $snapshot = Snapshot::model()->findByAttributes(array('id'=>$id));
+      $ocean = new Ocean();
+      $created = $ocean->duplicate($snapshot->name,$snapshot->region,$snapshot->image_id);
+      
+    }
 }

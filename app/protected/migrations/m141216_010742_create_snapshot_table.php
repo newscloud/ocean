@@ -20,6 +20,8 @@ class m141216_010742_create_snapshot_table extends CDbMigration
                  'user_id'  => 'integer default 0',               
                  'image_id' => 'integer default 0',
                  'name' => 'string NOT NULL',
+                 'region'=>'string NOT NULL',
+                 'active' =>  'tinyint default 0',                 
                  'created_at' => 'DATETIME NOT NULL DEFAULT 0',
                  'modified_at' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
                    ), $this->MySqlOptions);

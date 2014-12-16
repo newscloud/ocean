@@ -23,11 +23,11 @@ class DaemonController extends Controller
 	{
 		return array (
 			array('allow',  // allow all users to perform 'receive' action
-				'actions'=>array('index','process'),
+				'actions'=>array('process'),
 				'users'=>array('*'),
 			),		
 			array('allow', // allow admin user to perform 'admin' actions
-				'actions'=>array('admin','reset'),
+				'actions'=>array(''),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -36,22 +36,9 @@ class DaemonController extends Controller
 		);
 	}
 	
-	public function actionIndex() {
-	  // if not using twitter streams, we'll process tweets by REST API
-	  if (!Yii::app()->params['twitter_stream']) {
-	    Tweet::model()->getStreams();	    
-	  } else {
-	    Stream::model()->process();
-	  }
-  }
-
   public function actionProcess() {
     // process Actions
-    Action::model()->processActions();
-	  }
-
+    Action::model()->process();
+	}
  
- public function actionReset() {
-   Tweet::model()->reset();
- }
 }

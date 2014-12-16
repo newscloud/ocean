@@ -24,7 +24,7 @@ class Ocean extends CComponent
     return $actions;
   }
 
-  public function getImages() {
+  public function getSnapshots() {
     // return the action api
     $action  = $this->digitalOcean->image();
     // return a collection of Action entity
@@ -41,7 +41,7 @@ class Ocean extends CComponent
     pp ($regions);
   }
 
-  public function instantiate($name,$region,$image_id,$size='512mb') {
+  public function launch_droplet($name,$region,$image_id,$size='512mb') {
     // return the action api
      $name = str_replace("_","-",$name);
     $droplet  = $this->digitalOcean->droplet();
@@ -49,19 +49,32 @@ class Ocean extends CComponent
     $droplet_id = $created->id;
   }
     
-  public function duplicate($name,$region,$image_id,$begin=0,$count=5,$size='512mb') {
+  public function duplicate($name,$region,$image_id,$begin=1,$count=3,$size='512mb') {
     // return the action api
-     $name = str_replace("_","-",$name);
+    $name = str_replace("_","-",$name);
     echo $name;
     $droplet  = $this->digitalOcean->droplet();
-    $created = $droplet->create($name.'-src', $region, $size, $image_id);
-    $droplet_id = $created->id;
-    pp ($created);
-    yexit();
-    for ($i = 0; $i < $count; $i++) {
-      $shutdown = $droplet->shutdown($droplet_id);
-      $snapshot = $droplet->snapshot($droplet_id, $name.'-copy-'.$i); 
-      break;
+    //$created = $droplet->create($name.'-src', $region, $size, $image_id);
+    //$droplet_id = $created->id;
+    $droplet_id = 3487144;
+    //pp ($created);
+    for ($i = $begin; $i < $count; $i++) {
+        try {
+          echo 'Shutting down '.$droplet_id;lb();
+          $shutdown = $droplet->shutdown($droplet_id);
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            die();
+        }
+      echo 'Sleep 15 seconds for power off...';lb();
+      sleep(15);        
+      echo 'Take snapshot of '.$droplet_id.' named '.$name.'-copy-'.$i;lb();      
+      try {
+        $snapshot = $droplet->snapshot($droplet_id, $name.'-copy-'.$i); 
+      } catch (Exception $e) {
+          echo 'Caught exception: ',  $e->getMessage(), "\n";
+          die();
+      }
     }
   }
 
