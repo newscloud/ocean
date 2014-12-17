@@ -43,6 +43,7 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/main.js');
 				array('label'=>'Droplets', 'url'=>array('/droplet/admin'), ),
 				array('label'=>'Images', 'url'=>array('/snapshot/admin'), ),
 				array('label'=>'Actions', 'url'=>array('/action/admin'), ),
+				array('label'=>'Domains', 'url'=>array('/domain/admin'), ),
 			)
   	  ) : array() ),
 

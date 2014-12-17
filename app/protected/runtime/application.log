@@ -552,3 +552,62 @@ Stack trace:
 #12 {main}
 ---
 2014/12/15 17:06:25 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ocean.do_migration' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `do_migration`.
+2014/12/17 10:51:00 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STRING NOT NULL,
+	`ttl` INTEGER DEFAULT 0,
+	`zone` TEXT DEFAULT NULL,
+	`ip_addre' at line 4. The SQL statement executed was: CREATE TABLE `do_domain` (
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`domain_id` INTEGER DEFAULT 0,
+	`name` STRING NOT NULL,
+	`ttl` INTEGER DEFAULT 0,
+	`zone` TEXT DEFAULT NULL,
+	`ip_address` STRING NOT NULL,
+	`active` TINYINT default 0,
+	`created_at` DATETIME NOT NULL DEFAULT 0,
+	`modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci.
+2014/12/17 10:52:07 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STRING NOT NULL,
+	`record_name` STRING NOT NULL,
+	`record_data` STRING NOT NULL,' at line 4. The SQL statement executed was: CREATE TABLE `do_domain_record` (
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`record_id` INTEGER DEFAULT 0,
+	`record_type` STRING NOT NULL,
+	`record_name` STRING NOT NULL,
+	`record_data` STRING NOT NULL,
+	`priority` INTEGER DEFAULT 0,
+	`port` INTEGER DEFAULT 0,
+	`weight` INTEGER DEFAULT 0,
+	`active` TINYINT default 0,
+	`created_at` DATETIME NOT NULL DEFAULT 0,
+	`modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci.
+2014/12/17 10:52:10 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STRING NOT NULL,
+	`record_name` STRING NOT NULL,
+	`record_data` STRING NOT NULL,' at line 4. The SQL statement executed was: CREATE TABLE `do_domain_record` (
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`record_id` INTEGER DEFAULT 0,
+	`record_type` STRING NOT NULL,
+	`record_name` STRING NOT NULL,
+	`record_data` STRING NOT NULL,
+	`priority` INTEGER DEFAULT 0,
+	`port` INTEGER DEFAULT 0,
+	`weight` INTEGER DEFAULT 0,
+	`active` TINYINT default 0,
+	`created_at` DATETIME NOT NULL DEFAULT 0,
+	`modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci.
+2014/12/17 10:52:20 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STRING NOT NULL,
+	`record_name` STRING NOT NULL,
+	`record_data` STRING NOT NULL,' at line 4. The SQL statement executed was: CREATE TABLE `do_domain_record` (
+	`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`record_id` INTEGER DEFAULT 0,
+	`record_type` STRING NOT NULL,
+	`record_name` STRING NOT NULL,
+	`record_data` STRING NOT NULL,
+	`priority` INTEGER DEFAULT 0,
+	`port` INTEGER DEFAULT 0,
+	`weight` INTEGER DEFAULT 0,
+	`active` TINYINT default 0,
+	`created_at` DATETIME NOT NULL DEFAULT 0,
+	`modified_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci.

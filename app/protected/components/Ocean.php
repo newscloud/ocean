@@ -32,6 +32,22 @@ class Ocean extends CComponent
     return $actions;
   }
   
+  public function getDomains() {
+    // return the action api
+    $action  = $this->digitalOcean->domain();
+    // return a collection of Action entity
+    $actions = $action->getAll();    
+    return $actions;
+  }
+  
+  public function getDomainRecords($name) {
+    // return the action api
+    $action  = $this->digitalOcean->domainRecord();
+    // return a collection of Action entity
+    $actions = $action->getAll($name);    
+    return $actions;
+  }
+  
   public function getRegions() {
     // return the region api
     $region = $this->digitalOcean->region();

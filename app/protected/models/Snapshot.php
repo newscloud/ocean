@@ -154,5 +154,24 @@ class Snapshot extends CActiveRecord
     $a->save();              
 	  return $result;
   }
+  
+  public function add($snapshot) {
+       $i = Snapshot::model()->findByAttributes(array('image_id'=>$snapshot->id));
+      if (empty($i)) {
+        $i = new Snapshot;
+        $i->created_at =new CDbExpression('NOW()');          
+      }
+      if (isset($snapshot->public) and $snapshot->public ==1) {
+        return false; // no need to save public images right now
+      } else 
+        $i->user_id = Yii::app()->user->id; 	  
+        $i->image_id = $snapshot->id;
+        $i->name = $snapshot->name;
+        $i->region = $snapshot->regions[0];
+        $i->active =1;
+        $i->modified_at =new CDbExpression('NOW()');          
+       $i->save();
+     return $i->id;
+     }
 	      
 }
