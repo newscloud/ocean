@@ -5,8 +5,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Action','url'=>array('index')),
-	array('label'=>'Create Action','url'=>array('create')),
+	array('label'=>'Process','url'=>array('/daemon/process')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -25,29 +24,29 @@ $('.search-form form').submit(function(){
 
 <h1>Manage Actions</h1>
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button btn')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
 	'id'=>'action-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
 		'droplet_id',
 		'snapshot_id',
-		'action',
-		'status',
+    array(
+      'name'=>'action',
+          'header' => 'Action',
+           'value' => array($model,'renderAction'), 
+      ),
+    array(
+      'name'=>'status',
+          'header' => 'Status',
+           'value' => array($model,'renderStatus'), 
+      ),
 		'stage',
+    array(
+      'name'=>'last_checked',
+          'header' => 'Last Checked',
+           'value' => array($model,'renderLastChecked'), 
+      ),
 		/*
 		'end_stage',
 		'last_checked',

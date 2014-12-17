@@ -116,22 +116,18 @@ class Action extends CActiveRecord
 		));
 	}
 	
-	public function process() {
-	  // look for stale actions
-	  $todo = Action::model()->findAllByAttributes(array('status'=>self::STATUS_ACTIVE));
-	  foreach ($todo as $item) {
-	    if ($item->action == self::ACTION_HISTORY) {
-    	  // try to shutdown / snapshot
-    	  // if no error, increment stage
-    	  // either way, update last_checked
-        $a = Action::model()->findByPk($action->id);
-        $a->status = self::STATUS_COMPLETE;
-        $a->save();
-        
-	    }
-	  }
-	}
-	
+  public function scopes()
+    {
+        return array(   
+          'active'=>array(
+              'condition'=>'status='.self::STATUS_ACTIVE, 
+          ),
+            'overdue'=>array(
+              'condition'=>'last_checked < '.(time()-(15*60)),               
+            ),
+        );
+    }
+    	
        public function renderStatus($data,$row)
             {
               if ($data->status == self::STATUS_ACTIVE) {
@@ -148,8 +144,19 @@ class Action extends CActiveRecord
                return $result;    
            }
 
+           public function renderAction($data,$row)
+                {
+                  if ($data->status == self::ACTION_SNAPSHOT) {
+                    $result = 'Snapshot';
+                   } else {
+                     $result = 'n/a';
+                   }
+                   return $result;    
+               }
+
   public function renderLastChecked($data,$row) {
-     if (is_null($data->last_checked) or $data->last_checked==0) return 'n/a';
+     if (is_null($data->last_checked)) return 'n/a';
+     if ($data->last_checked==0) return 'Pending';
       // if day of year of now is less than or equal to time_str
       if (date('z',time()) > date('z',$data->last_checked)) {
         $date_str = Yii::app()->dateFormatter->format('h:mm a',$data->last_checked,'medium',null);
@@ -159,4 +166,17 @@ class Action extends CActiveRecord
         }
       return $date_str;
   }	
+  
+	public function process() {
+	  set_time_limit(0);
+	  // look for overdue actions	  
+	  $todo = Action::model()->overdue()->findAllByAttributes(array('status'=>self::STATUS_ACTIVE));
+	  foreach ($todo as $item) {
+	    if ($item->action == self::ACTION_SNAPSHOT) {
+          $result = Snapshot::model()->take($item->id);          
+	    }
+	  }
+	}
+	
+  
 }

@@ -103,7 +103,6 @@ class Snapshot extends CActiveRecord
      $snapshots = $ocean->getSnapshots();
      foreach ($snapshots as $i) {
        $image_id = $this->add($i);
-       //$image_id = $i->id;
        if ($image_id!==false) {
          echo $image_id;lb();
          pp($i);        
@@ -111,50 +110,46 @@ class Snapshot extends CActiveRecord
      }	      
    }
 
-   public function add($snapshot) {
-      $i = Snapshot::model()->findByAttributes(array('image_id'=>$snapshot->id));
-     if (empty($i)) {
-       $i = new Snapshot;
-       $i->created_at =new CDbExpression('NOW()');          
-     }
-     if (isset($snapshot->public) and $snapshot->public ==1) {
-       return false; // no need to save public images right now
-     } else 
-       $i->user_id = Yii::app()->user->id; 	  
-       $i->image_id = $snapshot->id;
-       $i->name = $snapshot->name;
-       $i->region = $snapshot->regions[0];
-       /*
-       $i->distribution = $snapshot->distribution;
-       if (isset($snapshot->slug))
-         $i->slug = $snapshot->slug;
-       else
-         $i->slug ='';
-       $i->minDiskSize = $snapshot->minDiskSize;
-       */
-       $i->active =1;
-       $i->modified_at =new CDbExpression('NOW()');          
-      $i->save();
-    return $i->id;
-    }	
-    
-    public function launch_droplet($id) {
+    public function replicate($id) {
+  	  // look up image_id
       $snapshot = Snapshot::model()->findByAttributes(array('id'=>$id));
+  	  // create the droplet 
       $ocean = new Ocean();
-      $created = $ocean->launch_droplet($snapshot->name,$snapshot->region,$snapshot->image_id);
+      $droplet_id = $ocean->launch_droplet($snapshot->name,$snapshot->region,$snapshot->image_id);
+  	  // add command to action table with droplet_id and image_id
+      $a = new Action();
+      $a->droplet_id = $droplet_id;
+      $a->snapshot_id = $snapshot->image_id;
+      $a->action = Action::ACTION_SNAPSHOT;
+      $a->status = Action::STATUS_ACTIVE;
+      $a->stage = 0;
+      $a->end_stage = 3;
+      $a->last_checked = 0;
+      $a->modified_at =new CDbExpression('NOW()');          
+      $a->created_at =new CDbExpression('NOW()');          
+      $a->save(); 
     }
-
-    public function duplicate($id) {
-      $image = Snapshot::model()->findByAttributes(array('id'=>$id));
-      $ocean = new Ocean();
-      $created = $ocean->duplicate($image->name,$image->region,$image->image_id);
-    }
-    
-    public function testing($id=9) {
-      $droplet_id = 3487144;
-      $snapshot = Snapshot::model()->findByAttributes(array('id'=>$id));
-      $ocean = new Ocean();
-      $created = $ocean->duplicate($snapshot->name,$snapshot->region,$snapshot->image_id);
-      
-    }
+  
+  public function take($action_id) {
+    $result = false;
+	  $a = Action::model()->findByPk($action_id);
+    $snapshot = Snapshot::model()->findByAttributes(array('image_id'=>$a->snapshot_id));
+    $ocean = new Ocean();
+    // attempt shutdown
+    // take snapshot
+    $result = $ocean->snapshot($a->stage,$a->droplet_id,$snapshot->name,$snapshot->region,$snapshot->image_id);
+    // if snapshot was successful
+    if ($result) {
+      // increment stage
+      $a->stage+=1;
+      // if last snapshot replication complete, end action
+      if (($a->stage+1) >= $a->end_stage)  
+        $a->status = Action::STATUS_COMPLETE;
+    } 
+	  // either way, update last_checked
+    $a->last_checked = time();
+    $a->save();              
+	  return $result;
+  }
+	      
 }

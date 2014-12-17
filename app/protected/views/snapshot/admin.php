@@ -22,6 +22,19 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
+<?php
+if(Yii::app()->user->hasFlash('info')) {
+  $this->widget('bootstrap.widgets.TbAlert', array(
+      'block'=>true, // display a larger alert block?
+      'fade'=>true, // use transitions?
+      'closeText'=>'×', // close link text - if set to false, no close link is displayed
+      'alerts'=>array( // configurations per alert type
+  	    'info'=>array('block'=>true, 'fade'=>true, 'closeText'=>'×'), // success, info, warning, error or danger  	    
+      ),
+  ));
+}
+
+?>
 <h1>Manage Images</h1>
 
 

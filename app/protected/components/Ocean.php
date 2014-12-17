@@ -42,40 +42,42 @@ class Ocean extends CComponent
   }
 
   public function launch_droplet($name,$region,$image_id,$size='512mb') {
-    // return the action api
-     $name = str_replace("_","-",$name);
+    // create a new droplet from a snapshot image
+    $name = str_replace("_","-",$name);
     $droplet  = $this->digitalOcean->droplet();
     $created = $droplet->create($name.'-src', $region, $size, $image_id);
     $droplet_id = $created->id;
+    return $droplet_id;
   }
     
-  public function duplicate($name,$region,$image_id,$begin=1,$count=3,$size='512mb') {
-    // return the action api
+  public function snapshot($stage,$droplet_id,$name,$region,$image_id,$begin=1,$count=3,$size='512mb') {
+    $no_sleep = false;
     $name = str_replace("_","-",$name);
-    echo $name;
     $droplet  = $this->digitalOcean->droplet();
-    //$created = $droplet->create($name.'-src', $region, $size, $image_id);
-    //$droplet_id = $created->id;
-    $droplet_id = 3487144;
-    //pp ($created);
-    for ($i = $begin; $i < $count; $i++) {
-        try {
-          echo 'Shutting down '.$droplet_id;lb();
-          $shutdown = $droplet->shutdown($droplet_id);
-        } catch (Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
-            die();
-        }
-      echo 'Sleep 15 seconds for power off...';lb();
-      sleep(15);        
-      echo 'Take snapshot of '.$droplet_id.' named '.$name.'-copy-'.$i;lb();      
       try {
-        $snapshot = $droplet->snapshot($droplet_id, $name.'-copy-'.$i); 
+        echo 'Shutting down '.$droplet_id;lb();
+        $shutdown = $droplet->shutdown($droplet_id);
       } catch (Exception $e) {
+          $err = $e->getMessage();
           echo 'Caught exception: ',  $e->getMessage(), "\n";
-          die();
+          if (stristr ( $err , 'already powered off')===false)
+            return false;
+          else
+            $no_sleep = true;
       }
+    if (!$no_sleep) {
+      echo 'Sleep 20 seconds for power off...';lb();
+      sleep(20);              
     }
+    echo 'Take snapshot of '.$droplet_id.' named '.$name.'-copy-'.$stage;lb();
+    try {
+      $snapshot = $droplet->snapshot($droplet_id, $name.'-copy-'.$stage); 
+    } catch (Exception $e) {
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
+        return false;
+    }
+    // shutdown and snapshot successful
+    return true;
   }
 
 }

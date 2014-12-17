@@ -35,7 +35,7 @@ class SnapshotController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','create','update','sync','index','view','duplicate'),
+				'actions'=>array('admin','delete','create','update','sync','index','view','replicate'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -153,10 +153,11 @@ class SnapshotController extends Controller
     $ss->sync();
   }
 
-	public function actionDuplicate($id) {
-	  set_time_limit(0);
+	public function actionReplicate($id) {
     $ss = new Snapshot();
-    $ss->testing();
+    $ss->replicate($id);
+    Yii::app()->user->setFlash('info','Replication initiated.');    
+    $this->redirect('/snapshot/admin');
   }	
 
 	/**

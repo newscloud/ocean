@@ -5,11 +5,8 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Snapshot','url'=>array('index')),
-	array('label'=>'Create Snapshot','url'=>array('create')),
-	array('label'=>'Update Snapshot','url'=>array('update','id'=>$model->id)),
-	array('label'=>'Delete Snapshot','url'=>'#','linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Snapshot','url'=>array('admin')),
+	array('label'=>'Replicate','url'=>array('/snapshot/replicate/'.$model->id)),
+	array('label'=>'Manage Snapshots','url'=>array('admin')),
 );
 ?>
 
