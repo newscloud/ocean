@@ -178,5 +178,4 @@ class Action extends CActiveRecord
 	  }
 	}
 	
-  
 }

@@ -13,6 +13,8 @@
  */
 class Snapshot extends CActiveRecord
 {
+  const NUMBER_REPLICATIONS = 5;
+  
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -123,7 +125,8 @@ class Snapshot extends CActiveRecord
       $a->action = Action::ACTION_SNAPSHOT;
       $a->status = Action::STATUS_ACTIVE;
       $a->stage = 0;
-      $a->end_stage = 3;
+      // user settable constant for number of replications to make
+      $a->end_stage = Snapshot::NUMBER_REPLICATIONS;
       $a->last_checked = 0;
       $a->modified_at =new CDbExpression('NOW()');          
       $a->created_at =new CDbExpression('NOW()');          
@@ -143,7 +146,7 @@ class Snapshot extends CActiveRecord
       // increment stage
       $a->stage+=1;
       // if last snapshot replication complete, end action
-      if (($a->stage+1) >= $a->end_stage)  
+      if ($a->stage >= $a->end_stage)  
         $a->status = Action::STATUS_COMPLETE;
     } 
 	  // either way, update last_checked
