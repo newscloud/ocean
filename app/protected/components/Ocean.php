@@ -39,6 +39,12 @@ class Ocean extends CComponent
     $actions = $action->getAll();    
     return $actions;
   }
+
+  public function createDomain($name,$ip_address) {
+    $action  = $this->digitalOcean->domain();
+    $create = $action->create($name,$ip_address);    
+    return $create;
+  }
   
   public function getDomainRecords($name) {
     // return the action api
@@ -46,6 +52,16 @@ class Ocean extends CComponent
     // return a collection of Action entity
     $actions = $action->getAll($name);    
     return $actions;
+  }
+  
+  public function createDomainRecord($domain_name,$type,$name,$data,$priority,$port,$weight) {
+    $domainRecord = $this->digitalOcean->domainRecord();
+    if ($priority=='') $priority=null;
+    if ($port=='') $port=null;
+    if ($weight=='') $weight=null;
+    // return the created DomainRecord entity of the domain 'bar.dk'
+    $created = $domainRecord->create($domain_name,$type, $name, $data,$priority,$port,$weight);
+    return $created;
   }
   
   public function getRegions() {

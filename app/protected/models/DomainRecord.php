@@ -48,8 +48,8 @@ class DomainRecord extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('record_type, record_name, record_data, modified_at', 'required'),
-			array('domain_id, record_id, priority, port, weight, active', 'numerical', 'integerOnly'=>true),
+			array('record_type, record_name, record_data', 'required'),
+			array('domain_id, record_id, active', 'numerical', 'integerOnly'=>true),
 			array('record_type, record_name, record_data', 'length', 'max'=>255),
 			array('created_at', 'safe'),
 			// The following rule is used by search().
@@ -120,31 +120,50 @@ class DomainRecord extends CActiveRecord
 		));
 	}
 	
-	public function sync() {
+	public function sync($id) {
+	  // lookup domain
+	   $d = Domain::model()->findByPk($id);
      $ocean = new Ocean();
-     $records = $ocean->getDomainRecords();
-     foreach ($records as $d) {
-       $record_id = $this->add($d);
+     $records = $ocean->getDomainRecords($d->name);
+     foreach ($records as $r) {
+       $record_id = $this->add($id,$r);
+/*
        if ($record_id!==false) {
          echo $record_id;lb();
          pp($d);        
        }
-     }	      
+*/       
    }
+  }
    
-   public function add($record) {
-       $d = DomainRecord::model()->findByAttributes(array('name'=>$record->name));
-      if (empty($d)) {
-        $d = new DomainRecord;
+   public function add($domain_id,$record) {
+       $dr = DomainRecord::model()->findByAttributes(array('record_id'=>$record->id));
+      if (empty($dr)) {
+        $dr = new DomainRecord;
       }
-      $d->name = $record->name;
-        $d->ttl = $record->ttl;
-        $d->zone = $record->zoneFile;
-        $d->active =1;
-       $d->created_at =new CDbExpression('NOW()');          
-       $d->modified_at =new CDbExpression('NOW()');          
-       $d->save();
-      return $d->id;
+      $dr->domain_id = $domain_id;
+      $dr->record_id = $record->id;
+      $dr->record_name = $record->name;
+      $dr->record_type = $record->type;
+        $dr->record_data = $record->data;
+        if (isset($record->priority))
+          $dr->priority = $record->priority;
+        else
+          $dr->priority = null;
+        if (isset($record->port))
+          $dr->port = $record->port;
+        else
+          $dr->port = null;
+        if (isset($record->weight))
+          $dr->weight = $record->weight;
+        else
+          $dr->weight = null;
+          
+        $dr->active =1;
+       $dr->created_at =new CDbExpression('NOW()');          
+       $dr->modified_at =new CDbExpression('NOW()');          
+       $dr->save();
+      return $dr->id;
      }	
 
      public function of_domain($domain_id = 0)
@@ -153,6 +172,20 @@ class DomainRecord extends CActiveRecord
          'condition'=>'domain_id='.$domain_id,
        ));
          return $this;
+     }
+     
+     public function remote_add($id) {
+  	   $d = Domain::model()->findByPk($id);
+       $ocean = new Ocean();
+       $record = $ocean->createDomainRecord($d->name,$this->record_type,$this->record_name,$this->record_data,$this->priority,$this->port,$this->weight);
+       $this->domain_id = $id;
+       $this->record_id = $record->id;
+       $this->active =1;
+       $this->created_at =new CDbExpression('NOW()');          
+       $this->modified_at =new CDbExpression('NOW()');                 
+       $this->save();
+       return true;
+       
      }
 	
 }

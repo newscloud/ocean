@@ -113,10 +113,12 @@ class Domain extends CActiveRecord
      $domains = $ocean->getDomains();
      foreach ($domains as $d) {
        $domain_id = $this->add($d);
+/*
        if ($domain_id!==false) {
          echo $domain_id;lb();
          pp($d);        
        }
+*/
      }	      
    }
 
@@ -132,7 +134,13 @@ class Domain extends CActiveRecord
        $d->created_at = $d->created_at;
        $d->modified_at =new CDbExpression('NOW()');          
        $d->save();
-       pp($d->getErrors());die();
       return $d->id;
      }
+     
+     	public function remote_add() {
+          $ocean = new Ocean();
+          $domain = $ocean->createDomain($this->name, $this->ip_address);
+          $this->save();
+          return true;
+      }     
 }

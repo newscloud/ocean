@@ -27,15 +27,15 @@ class DomainRecordController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(''),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('',),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete','index','view','create','update'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -59,7 +59,7 @@ class DomainRecordController extends Controller
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate()
+	public function actionCreate($id)
 	{
 		$model=new DomainRecord;
 
@@ -69,8 +69,10 @@ class DomainRecordController extends Controller
 		if(isset($_POST['DomainRecord']))
 		{
 			$model->attributes=$_POST['DomainRecord'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->validate()) {
+			  $model->remote_add($id);
+				$this->redirect(array('/domain/view/','id'=>$id));
+			}
 		}
 
 		$this->render('create',array(

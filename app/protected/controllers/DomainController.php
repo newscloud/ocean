@@ -27,15 +27,15 @@ class DomainController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(''),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array(''),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','sync'),
+				'actions'=>array('admin','delete','sync','syncrecords','create','update','index','view'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -61,6 +61,13 @@ class DomainController extends Controller
     public function actionSync() {
       $domain = new Domain();
       $domain->sync();
+      $this->redirect('/domain/admin');
+    }
+
+    public function actionSyncrecords($id) {
+      $dr = new DomainRecord();
+      $dr->sync($id);
+      $this->redirect('/domain/view/'.$id);
     }
 
 
@@ -77,9 +84,11 @@ class DomainController extends Controller
 
 		if(isset($_POST['Domain']))
 		{
-			$model->attributes=$_POST['Domain'];
-			if($model->save())
+			$model->attributes=$_POST['Domain'];			
+			if($model->validate()) {
+			  $model->remote_add();
 				$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
 		$this->render('create',array(

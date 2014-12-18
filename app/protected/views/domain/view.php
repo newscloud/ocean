@@ -5,26 +5,35 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Domain','url'=>array('index')),
-	array('label'=>'Create Domain','url'=>array('create')),
-	array('label'=>'Update Domain','url'=>array('update','id'=>$model->id)),
-	array('label'=>'Delete Domain','url'=>'#','linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
+	array('label'=>'Sync Domain Records','url'=>array('/domain/syncrecords/'.$model->id)),
+	array('label'=>'Add Record','url'=>array('/domainrecord/create/'.$model->id)),
 	array('label'=>'Manage Domain','url'=>array('admin')),
 );
 ?>
 
-<h1>View Domain #<?php echo $model->id; ?></h1>
+<h1>Domain <?php echo $model->name; ?></h1>
 
-<?php $this->widget('bootstrap.widgets.TbDetailView',array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'name',
-		'ttl',
-		'zone',
-		'ip_address',
-		'active',
-		'created_at',
-		'modified_at',
+<?php 
+
+$this->widget('bootstrap.widgets.TbGridView',array(
+	'id'=>'domainrecord-grid',
+	'dataProvider'=>$records,
+	'type'=>'striped',
+	'columns'=>array(
+    array('class'=>'CDataColumn','value'=>'$data->record_id', 'header'=>'Ext ID'),
+    array('class'=>'CDataColumn','value'=>'$data->record_name', 'header'=>'Name'),
+    array('class'=>'CDataColumn','value'=>'$data->record_type', 'header'=>'Type'),
+    array('class'=>'CDataColumn','value'=>'$data->record_data', 'header'=>'Data'),
+
+/*
+    array(            
+        'name'=>'user_id',
+        'value'=>array($this,'showUser'), 
+        ),
+
+   array('class'=>'CLinkColumn','labelExpression'=>'showSubscriptionStatus($data->status)', 'header'=>'Status','urlExpression'=>'showSubscriptionLink($data->user_id,$data->list_id,$data->status)'),
+*/
 	),
-)); ?>
+)); 
+
+?>
