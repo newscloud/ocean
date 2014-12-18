@@ -40,12 +40,6 @@ class Ocean extends CComponent
     return $actions;
   }
 
-  public function createDomain($name,$ip_address) {
-    $action  = $this->digitalOcean->domain();
-    $create = $action->create($name,$ip_address);    
-    return $create;
-  }
-  
   public function getDomainRecords($name) {
     // return the action api
     $action  = $this->digitalOcean->domainRecord();
@@ -53,7 +47,13 @@ class Ocean extends CComponent
     $actions = $action->getAll($name);    
     return $actions;
   }
-  
+
+  public function createDomain($name,$ip_address) {
+    $action  = $this->digitalOcean->domain();
+    $create = $action->create($name,$ip_address);    
+    return $create;
+  }
+    
   public function createDomainRecord($domain_name,$type,$name,$data,$priority,$port,$weight) {
     $domainRecord = $this->digitalOcean->domainRecord();
     if ($priority=='') $priority=null;
